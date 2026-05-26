@@ -1,0 +1,82 @@
+name: Daily Brief
+
+on:
+  schedule:
+    # 7:00 AM PST (15:00 UTC) every morning
+    - cron: "0 15 * * *"
+  workflow_dispatch:
+    inputs:
+      no_ai:
+        description: "Skip AI summarization (use extractive fallback)"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  generate:
+    name: Generate Daily Brief
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate brief
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+        run: |
+          EXTRA_FLAGS=""
+          if [ "${{ inputs.no_ai }}" = "true" ]; then
+            EXTRA_FLAGS="--no-ai"
+          fi
+          python src/main.py \
+            --config config/sources.json \
+            --output output/index.html \
+            $EXTRA_FLAGS
+
+      - name: Copy assets to output
+        run: |
+          # Copy any static assets (favicon, etc.) if they exist
+          if [ -d "static" ]; then
+            cp -r static/. output/
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Summary
+        run: |
+          echo "## ✅ Daily Brief Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date +'%A, %B %-d, %Y')" >> $GITHUB_STEP_SUMMARY
+          echo "**Output:** \`output/index.html\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Page URL:** ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY

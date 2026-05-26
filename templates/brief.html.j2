@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{{ title }} — {{ date_str }}" />
+  <title>{{ title }} — {{ date_str }}</title>
+  <style>
+    /* ── Reset & base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #242736;
+      --border: #2e3347;
+      --text: #e2e8f0;
+      --muted: #8892a4;
+      --accent: #6366f1;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Header ───────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+    header .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+    header .date {
+      font-size: 1rem;
+      color: var(--muted);
+    }
+    header .meta {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    /* ── Nav tabs ─────────────────────────────────────────── */
+    nav.tabs {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    nav.tabs::-webkit-scrollbar { display: none; }
+    nav.tabs ul {
+      display: flex;
+      list-style: none;
+      gap: 0;
+      padding: 0 1rem;
+      min-width: max-content;
+    }
+    nav.tabs ul li a {
+      display: block;
+      padding: 0.85rem 1.1rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    nav.tabs ul li a:hover { color: var(--text); }
+    nav.tabs ul li a.active {
+      color: #fff;
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── Main layout ──────────────────────────────────────── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ── Category section ─────────────────────────────────── */
+    .category {
+      margin-bottom: 3rem;
+      scroll-margin-top: 4rem;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .category-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .category-header h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .story-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+    }
+
+    /* ── Story card ───────────────────────────────────────── */
+    .story {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 0.75rem;
+      transition: border-color 0.15s, transform 0.1s;
+      position: relative;
+    }
+    .story:hover {
+      border-color: #3d4459;
+      transform: translateY(-1px);
+    }
+    .story-source {
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .story h3 {
+      font-size: 0.975rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 0.45rem;
+    }
+    .story h3 a {
+      color: #e2e8f0;
+      text-decoration: none;
+    }
+    .story h3 a:hover { color: #fff; text-decoration: underline; }
+    .story p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .story .accent-bar {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      border-radius: 0 3px 3px 0;
+      opacity: 0.6;
+    }
+    .story { padding-left: 1.6rem; }
+
+    /* ── Empty state ──────────────────────────────────────── */
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 2rem;
+      font-size: 0.9rem;
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.75rem;
+      color: #3d4459;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: #4b5563; text-decoration: none; }
+
+    /* ── Mobile tweaks ────────────────────────────────────── */
+    @media (max-width: 600px) {
+      header { padding: 1.5rem 1rem 1.25rem; }
+      main { padding: 1.25rem 0.75rem 3rem; }
+      .story { padding: 0.9rem 1rem 0.9rem 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="eyebrow">Morning Intelligence</div>
+    <h1>{{ title }}</h1>
+    <div class="date">{{ date_str }}</div>
+    <div class="meta">{{ total_stories }} stories · generated {{ generated_at.strftime("%H:%M UTC") }}</div>
+  </header>
+
+  <nav class="tabs" aria-label="Categories">
+    <ul>
+      {% for cat in categories %}
+      <li>
+        <a href="#{{ cat.key }}" {% if loop.first %}class="active"{% endif %}>
+          {{ cat.label }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+
+  <main>
+    {% for cat in categories %}
+    <section class="category" id="{{ cat.key }}">
+      <div class="category-header">
+        <span class="category-dot" style="background: {{ cat.color }}"></span>
+        <h2>{{ cat.label }}</h2>
+        <span class="story-count">{{ cat.stories | length }} stories</span>
+      </div>
+
+      {% if cat.stories %}
+        {% for story in cat.stories %}
+        <article class="story">
+          <span class="accent-bar" style="background: {{ cat.color }}"></span>
+          <div class="story-source">{{ story.source }}</div>
+          <h3><a href="{{ story.url }}" target="_blank" rel="noopener noreferrer">{{ story.title }}</a></h3>
+          {% if story.summary %}
+          <p>{{ story.summary }}</p>
+          {% endif %}
+        </article>
+        {% endfor %}
+      {% else %}
+        <div class="empty">No stories available for this category today.</div>
+      {% endif %}
+    </section>
+    {% endfor %}
+  </main>
+
+  <footer>
+    <p>Generated automatically · <a href="https://github.com" target="_blank">View on GitHub</a></p>
+  </footer>
+
+  <script>
+    // Highlight active nav tab on scroll
+    const sections = document.querySelectorAll('.category');
+    const links = document.querySelectorAll('nav.tabs a');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const active = document.querySelector(`nav.tabs a[href="#${entry.target.id}"]`);
+          if (active) {
+            active.classList.add('active');
+            active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Smooth scroll for tab clicks
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+{
+  "categories": {
+    "tech": {
+      "label": "🖥️ Tech",
+      "color": "#6366f1",
+      "sources": [
+        {
+          "type": "rss",
+          "name": "Hacker News Top",
+          "url": "https://hnrss.org/frontpage",
+          "max_items": 10
+        },
+        {
+          "type": "rss",
+          "name": "The Verge",
+          "url": "https://www.theverge.com/rss/index.xml",
+          "max_items": 5
+        },
+        {
+          "type": "rss",
+          "name": "Wired",
+          "url": "https://www.wired.com/feed/rss",
+          "max_items": 5
+        },
+        {
+          "type": "hackernews",
+          "name": "Hacker News API",
+          "max_items": 10,
+          "min_score": 100
+        },
+        {
+          "type": "devto",
+          "name": "Dev.to Top",
+          "tags": ["javascript", "python", "ai", "webdev"],
+          "max_items": 5
+        }
+      ]
+    },
+    "business": {
+      "label": "💼 Business",
+      "color": "#0ea5e9",
+      "sources": [
+        {
+          "type": "rss",
+          "name": "TechCrunch",
+          "url": "https://techcrunch.com/feed/",
+          "max_items": 5
+        },
+        {
+          "type": "rss",
+          "name": "Reuters Business",
+          "url": "https://feeds.reuters.com/reuters/businessNews",
+          "max_items": 5
+        },
+        {
+          "type": "rss",
+          "name": "Bloomberg Technology",
+          "url": "https://feeds.bloomberg.com/technology/news.rss",
+          "max_items": 5
+        },
+        {
+          "type": "newsapi",
+          "name": "Business Headlines",
+          "category": "business",
+          "country": "us",
+          "max_items": 5
+        }
+      ]
+    },
+    "local_sf": {
+      "label": "🌉 SF & Bay Area",
+      "color": "#f59e0b",
+      "sources": [
+        {
+          "type": "rss",
+          "name": "SF Chronicle",
+          "url": "https://www.sfchronicle.com/bayarea/?rss=1",
+          "max_items": 5
+        },
+        {
+          "type": "rss",
+          "name": "Mission Local",
+          "url": "https://missionlocal.org/feed/",
+          "max_items": 5
+        },
+        {
+          "type": "newsapi",
+          "name": "San Francisco News",
+          "query": "San Francisco",
+          "language": "en",
+          "max_items": 5
+        }
+      ]
+    },
+    "ai_ml": {
+      "label": "🤖 AI & Machine Learning",
+      "color": "#10b981",
+      "sources": [
+        {
+          "type": "rss",
+          "name": "MIT AI News",
+          "url": "https://news.mit.edu/rss/topic/artificial-intelligence2",
+          "max_items": 5
+        },
+        {
+          "type": "rss",
+          "name": "Hugging Face Blog",
+          "url": "https://huggingface.co/blog/feed.xml",
+          "max_items": 5
+        },
+        {
+          "type": "hackernews",
+          "name": "HN: AI Stories",
+          "search_term": "AI OR LLM OR machine learning",
+          "max_items": 5,
+          "min_score": 50
+        },
+        {
+          "type": "devto",
+          "name": "Dev.to AI",
+          "tags": ["ai", "machinelearning", "llm"],
+          "max_items": 5
+        }
+      ]
+    },
+    "personal": {
+      "label": "⭐ Personal Interests",
+      "color": "#ec4899",
+      "sources": [
+        {
+          "type": "rss",
+          "name": "CrossFit Journal",
+          "url": "https://journal.crossfit.com/feed",
+          "max_items": 3
+        },
+        {
+          "type": "rss",
+          "name": "Odoo Blog",
+          "url": "https://www.odoo.com/blog/odoo-news-5/rss",
+          "max_items": 3
+        },
+        {
+          "type": "newsapi",
+          "name": "Fitness & Health",
+          "query": "fitness health wellness technology",
+          "language": "en",
+          "max_items": 3
+        }
+      ]
+    }
+  },
+  "settings": {
+    "max_stories_per_category": 5,
+    "summary_model": "claude-3-haiku-20240307",
+    "summary_max_tokens": 150,
+    "request_timeout_seconds": 10,
+    "user_agent": "DailyBrief/1.0 (automated news aggregator)",
+    "output_filename": "index.html",
+    "brief_title": "Lou's Daily Brief",
+    "brief_subtitle": "Your morning intelligence digest"
+  }
+}
