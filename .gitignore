@@ -14,7 +14,7 @@ build/
 .env.local
 
 # Output (generated, don't commit)
-output/
+# output/ — now published via docs/ for GitHub Pages
 
 # OS
 .DS_Store
